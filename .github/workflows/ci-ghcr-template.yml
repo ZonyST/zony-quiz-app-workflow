@@ -1,0 +1,75 @@
+name: CI + Docker Image to GHCR
+
+# TODO: Trigger einstellen! Der Workflow soll bei "push" starten.
+on:
+  workflow_dispatch: # (Erlaubt auch manuelles Starten per Button)
+  # ???
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  quality:
+    name: Code Checks & Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        # TODO: Nutze die actions/checkout Action
+        run: echo "TODO"
+
+      - name: Setup Node.js
+        # TODO: Nutze die actions/setup-node Action (Node Version 20 ist gut)
+        run: echo "TODO"
+
+      - name: Install dependencies
+        # TODO: Welcher npm Befehl installiert Pakete?
+        run: echo "TODO"
+
+      - name: Run lint
+        # TODO: Welcher npm Befehl startet den Linter? (Schau in die package.json!)
+        run: echo "TODO"
+
+      - name: Run tests
+        # TODO: Welcher npm Befehl startet die Tests? (Schau in die package.json!)
+        run: echo "TODO"
+
+  docker:
+    name: Build und Push Docker Images
+    runs-on: ubuntu-latest
+
+    # TODO: Dieser Job darf erst starten, wenn 'quality' erfolgreich war!
+    # TODO: Dieser Job darf NUR laufen, wenn wir auf dem 'main' Branch sind!
+
+    steps:
+      - name: Checkout repository
+        # TODO: Nutze die actions/checkout Action
+        run: echo "TODO"
+
+      # --- AB HIER HILFT EUCH DAS SKELETON ---
+      # Dieser Schritt generiert Variablen für die Image-Namen (alles kleingeschrieben)
+      # und kürzt die Git-Commit-ID auf 8 Zeichen. Lasst diesen Schritt unverändert!
+      - name: Prepare lowercase image namespace
+        id: image-vars
+        run: |
+          echo "owner_lc=${GITHUB_REPOSITORY_OWNER,,}" >> "$GITHUB_OUTPUT"
+          echo "short_sha=${GITHUB_SHA::8}" >> "$GITHUB_OUTPUT"
+
+      - name: Log in to GHCR
+        # TODO: Nutze docker/login-action
+        # Tipps: registry ist 'ghcr.io', username ist '${{ github.actor }}', password ist '${{ secrets.GITHUB_TOKEN }}'
+        run: echo "TODO"
+
+      - name: Build and push web image
+        # TODO: Nutze docker/build-push-action
+        # Tipps:
+        # - context: .
+        # - file: services/web/Dockerfile
+        # - push: true
+        # - tags: ghcr.io/${{ steps.image-vars.outputs.owner_lc }}/quiz-web:${{ steps.image-vars.outputs.short_sha }},ghcr.io/${{ steps.image-vars.outputs.owner_lc }}/quiz-web:latest
+        run: echo "TODO"
+
+      - name: Build and push api image
+        # TODO: Nutze docker/build-push-action analog zum web-image! (Achtung, Context und File sind anders!)
+        run: echo "TODO"
